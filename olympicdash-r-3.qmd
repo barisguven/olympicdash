@@ -5,8 +5,13 @@ format:
     orientation: columns
     nav-buttons: [github]
     github: https://github.com/posit-conf-2024/olympicdash
+    theme: 
+     - sketchy
+     - style/olympicdash.scss
 logo: images/olympics-logo.svg
 logo-alt: "Olympics logo with multicolored circles."
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r}
@@ -14,6 +19,7 @@ logo-alt: "Olympics logo with multicolored circles."
 #| message: false
 library(tidyverse)
 library(gt)
+library(scales)
 ```
 
 ```{r}
@@ -46,8 +52,8 @@ summer_olympics <- olympics |>
 ```{r}
 #| label: summer-medals-by-sport
 #| title: Medals by sport
-#| fig-width: 10
-#| fig-asp: 0.618
+#| fig-width: 8
+#| fig-asp: 0.6
 summer_olympics |>
   mutate(
     sport = fct_lump_n(sport, n = 15),
@@ -56,8 +62,19 @@ summer_olympics |>
     sport = fct_relevel(sport, "Other", after = 0)
   ) |>
   ggplot(aes(y = sport, fill = medal)) +
-  geom_bar() +
+  geom_bar(color = "white") +
   guides(fill = guide_legend(reverse = TRUE)) +
+  scale_fill_manual(
+      values = c(
+          "Gold" = "#d4af37",
+          "Silver" = "#c0c0c0",
+          "Bronze" = "#cd7f32"
+      )
+  ) +
+  scale_x_continuous(
+      breaks = seq(1000, 7000, 1000),
+      labels = label_number(big.mark = ",")
+      ) +
   labs(
     x = NULL,
     y = NULL,
@@ -65,7 +82,8 @@ summer_olympics |>
   ) +
   theme_minimal() +
   theme(
-    legend.position = c(0.8, 0.2),
+    legend.position = "inside",
+    legend.position.inside = c(0.8, 0.2),
     legend.direction = "horizontal",
     legend.background = element_rect(fill = "white", color = "gray")
   )
@@ -87,6 +105,13 @@ summer_olympics |>
   geom_line() +
   guides(color = guide_legend(reverse = TRUE)) +
   scale_x_continuous(breaks = seq(1896, 2020, 8)) +
+  scale_color_manual(
+            values = c(
+          "Gold" = "#d4af37",
+          "Silver" = "#c0c0c0",
+          "Bronze" = "#cd7f32"
+      ) 
+  ) +
   labs(
     x = "Year",
     y = NULL,
@@ -94,7 +119,8 @@ summer_olympics |>
   ) +
   theme_minimal() +
   theme(
-    legend.position = c(0.2, 0.8),
+    legend.position = "inside",
+    legend.position.inside = c(0.2, 0.8),
     legend.direction = "horizontal",
     legend.background = element_rect(fill = "white", color = "gray")
   )
@@ -215,8 +241,18 @@ winter_olympics |>
     sport = fct_relevel(sport, "Other", after = 0)
   ) |>
   ggplot(aes(y = sport, fill = medal)) +
-  geom_bar() +
+  geom_bar(color = "white") +
   guides(fill = guide_legend(reverse = TRUE)) +
+  scale_fill_manual(
+      values = c(
+          "Gold" = "#d4af37",
+          "Silver" = "#c0c0c0",
+          "Bronze" = "#cd7f32"
+      )
+  ) +
+  scale_x_continuous(
+      labels = label_number(big.mark = ",")
+  ) +
   labs(
     x = NULL,
     y = NULL,
@@ -224,7 +260,7 @@ winter_olympics |>
   ) +
   theme_minimal() +
   theme(
-    legend.position = c(0.8, 0.2),
+    legend.position.inside = c(0.8, 0.2),
     legend.direction = "horizontal",
     legend.background = element_rect(fill = "white", color = "gray")
   )
@@ -247,6 +283,13 @@ winter_olympics |>
   geom_line() +
   guides(color = guide_legend(reverse = TRUE)) +
   scale_x_continuous(breaks = seq(1896, 2020, 8)) +
+  scale_color_manual(
+      values = c(
+          "Gold" = "#d4af37",
+          "Silver" = "#c0c0c0",
+          "Bronze" = "#cd7f32"
+      )
+  ) +
   labs(
     x = "Year",
     y = NULL,
@@ -254,7 +297,7 @@ winter_olympics |>
   ) +
   theme_minimal() +
   theme(
-    legend.position = c(0.2, 0.8),
+    legend.position.inside = c(0.2, 0.8),
     legend.direction = "horizontal",
     legend.background = element_rect(fill = "white", color = "gray")
   )
